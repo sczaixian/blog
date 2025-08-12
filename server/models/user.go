@@ -1,10 +1,5 @@
 package models
 
-import (
-	"gorm.io/gorm"
-	"time"
-)
-
 // 用户
 
 type User struct {
