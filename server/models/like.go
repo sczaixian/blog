@@ -4,6 +4,6 @@ type Like struct {
 	BaseModel
 	UserID    uint    `gorm:"index"`                // 用户id
 	ArticleID uint    `gorm:"index"`                //文章id
-	User      User    `gorm:"foreignkey:UserId"`    // 点赞用户
-	Article   Article `gorm:"foreignkey:ArticleId"` // 点赞文章
+	User      User    `gorm:"foreignkey:UserID"`    // 点赞用户
+	Article   Article `gorm:"foreignkey:ArticleID"` // 点赞文章
 }

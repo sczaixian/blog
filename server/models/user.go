@@ -11,7 +11,7 @@ type User struct {
 	Bio           string         `gorm:"type:text;comment:个人简介" json:"bio"`
 	Status        int            `gorm:"default:1;comment:状态（1：正常，0：禁用）" json:"status"`
 	LastLoginIP   string         `gorm:"size:50;comment:最后登录ip" json:"last_login_ip"`
-	Articles      []Article      `gorm:"foreignkey:UserId;comment:文章" json:"articles"`
+	Articles      []Article      `gorm:"foreignkey:UserID;comment:文章" json:"articles"`
 	Followers     []UserFollow   `gorm:"foreignkey:FollowingID" json:"followers"`  // 粉丝
 	Followings    []UserFollow   `gorm:"foreignkey:FollowingID" json:"followings"` // 关注的人
 	Notifications []Notification `gorm:"foreignKey:UserID"`                        // 用户通知

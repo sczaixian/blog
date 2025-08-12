@@ -1,0 +1,137 @@
+
+计划步骤
+1. 模型以及关系定义
+2. api 接口定义以及模拟测试
+3. 实现业务逻辑
+4. 测试方法编写
+5. 测试部署 docker、docker-compose
+6. 上线测试
+
+数据库需要哪些：
+mysql：用户信息、文章标题、作者、发布时间、分类、标签、评论内容、评论者等结构化数据
+MongoDB：文章内容存储（支持富文本、Markdown等格式）、草稿：易于扩展，适合存储半结构化数据
+redis：热门文章和排行榜缓存、页面片段缓存、登录状态管理、限流和频率控制、实时统计数据（如阅读量）
+es：全文检索功能、复杂的文章搜索（按关键词、标签、分类等）、
+图数据库：用户关系网络（关注/粉丝）、内容推荐系统
+时序数据库：访问日志分析、系统性能监控、用户行为时间序列分析、流量统计和报表
+对像存储数据库：图片、视频、静态资源、备份和归档：低成本存储大量非结构化数据
+
+
+
+type Article struct {
+	UserID     uint `json:"user_id" gorm:"index"`     // 作者id
+
+	定义与User模型的关联关系 foreignkey:UserID 指定使用本结构体的UserID字段作为外键
+    这是一个"属于(Belongs To)"关系，表示文章属于某个用户
+    数据库层面：articles表有user_id字段存储用户ID
+    ORM层面：通过User字段可以自动加载关联的用户对象
+    使用时：article.User 会返回完整的用户对象
+	User     User      `json:"user" gorm:"foreignkey:UserID"`         // 作者
+
+
+	CategoryID uint `json:"category_id" gorm:"index"` // 分类id
+	Category Category  `json:"category" gorm:"foreignkey:CategoryID"` // 分类
+
+
+	Tags     []Tag     `gorm:"many2many:article_tags;"`               // 标签
+	多对多关系，通过article_tags中间表关联Tag模型
+
+
+	Comments []Comment `gorm:"foreignKey:ArticleID"`                  // 评论
+    一对多关系，Comment模型中有ArticleID字段作为外键
+
+	Likes    []Like    `gorm:"foreignKey:ArticleID"`                  // 点赞
+	一对多关系，Like模型中有ArticleID字段作为外键
+}
+
+User (users table)
+  |
+  | (一对多)
+  v
+Article (articles table)
+  |   \
+  |    \ (多对多)
+  |     v
+  |    Tag (tags table) via article_tags
+  |
+  v (一对多)
+Comment (comments table)
+
+
+
+// 创建文章
+article := Article{
+    Title: "Go语言入门",
+    Content: "...",
+    UserID: 123, // 设置作者ID
+}
+
+// 查询文章并加载关联用户
+db.Preload("User").First(&article, 1)
+fmt.Println(article.User.Name) // 访问作者姓名
+
+// 查询某用户的所有文章
+var userArticles []Article
+db.Where("user_id = ?", 123).Find(&userArticles)
+
+
+
+
+user:
+    post:
+        /login
+        /register
+        /logout
+        /avatar 头像
+    put
+        /password 设置密码
+        /profile 修改信息
+
+
+article：
+    get:
+        /articles  //文章列表
+        /article/{id}
+    put:
+        /article/{id}  // 修改
+    delete:
+        /article/{id}  // 删除
+
+    post:
+        /article/{id}  // 发布
+
+comment
+    get：
+        /article/{id}/comments  // 文章下所有评论
+
+    post:
+        /article/{id}/comments  // 添加评论
+        /comment/{parent_id}/replay //回复评论
+
+    delete:
+        /comments/{id}  // 删除评论
+
+tag:
+    get:
+        /tags  // 获取标签
+
+category:
+    get:
+        /categories
+    put/delete:
+        /categories/id
+
+like
+    post/delete:
+        /article/id/like
+
+follow:
+    get:
+        /users/id/followers
+        /users/id/following
+    post/delete:
+        /users/id/follow
+
+notification:
+    get:
+        /notifications

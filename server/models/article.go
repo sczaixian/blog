@@ -16,9 +16,9 @@ type Article struct {
 	UserID     uint `json:"user_id" gorm:"index"`     // 作者id
 	CategoryID uint `json:"category_id" gorm:"index"` // 分类id
 
-	User     User      `json:"user" gorm:"foreignkey:UserId"`         // 作者
-	Category Category  `json:"category" gorm:"foreignkey:CategoryID"` // 分类
-	Tags     []Tag     `gorm:"many2many:article_tags;"`               // 标签
-	Comments []Comment `gorm:"foreignKey:ArticleID"`                  // 评论
-	Likes    []Like    `gorm:"foreignKey:ArticleID"`                  // 点赞
+	User     User      `json:"user" gorm:"foreignkey:UserID;reference:ID"`         // 作者
+	Category Category  `json:"category" gorm:"foreignkey:CategoryID;reference:ID"` // 分类
+	Tags     []Tag     `gorm:"many2many:article_tags;"`                            // 标签
+	Comments []Comment `gorm:"foreignKey:ArticleID"`                               // 评论
+	Likes    []Like    `gorm:"foreignKey:ArticleID"`                               // 点赞
 }
