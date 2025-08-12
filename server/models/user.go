@@ -2,6 +2,12 @@ package models
 
 // 用户
 
+type Login interface {
+	GetUserName() string
+	GetUserId() uint
+	GetUserInfo() any
+}
+
 type User struct {
 	BaseModel
 	UserName      string         `gorm:"type:varchar(50);not null;unique;comment:用户名" json:"user_name"`
@@ -33,4 +39,14 @@ func (User) TableName() string {
 
 func (UserFollow) TableName() string {
 	return "user_follows"
+}
+
+func (s *User) GetUserName() string {
+	return s.UserName
+}
+func (s *User) GetUserId() uint {
+	return s.ID
+}
+func (s *User) GetUserInfo() any {
+	return *s
 }
