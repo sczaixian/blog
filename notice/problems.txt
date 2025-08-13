@@ -143,3 +143,20 @@ notification:
 redis 存储 token
 
 
+Gin 内置绑定方法 根据请求的 Content-Type 自动选择解析器（JSON/XML/Form 等
+ShouldBind(&obj)：通用绑定，自动推断类型
+ShouldBindJSON(&obj)：仅绑定 JSON 数据
+ShouldBindXML(&obj)：绑定 XML 数据
+ShouldBindQuery(&obj)：仅绑定 URL Query 参数（适用于 GET 请求）
+ShouldBindYAML(&obj)：绑定 YAML 数据
+
+
+手动获取数据:无需结构体
+Form 数据：c.PostForm("name")、c.PostFormArray("ids")
+Query 参数：c.Query("page")。
+Header/Cookie：c.GetHeader("User-Agent")、c.Cookie("session")
+
+
+
+
+

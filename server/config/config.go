@@ -6,4 +6,6 @@ type Server struct {
 	Mysql Mysql `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
 	// 跨域配置
 	Cors CORS `mapstructure:"cors" json:"cors" yaml:"cors"`
+
+	Zap Zap `mapstructure:"zap" json:"zap" yaml:"zap"`
 }

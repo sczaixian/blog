@@ -16,7 +16,7 @@ type ArticleApi struct{}
 
 func (a *ArticleApi) CreateArticle(c *gin.Context) {
 	var article request.CreateArticle
-	err := c.ShouldBind(&article)
+	err := c.ShouldBindJSON(&article)
 	if err != nil {
 		common_response.FailWithMessage(err.Error(), c)
 		return
