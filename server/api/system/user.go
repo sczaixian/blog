@@ -51,7 +51,7 @@ func (u *UserApi) Login(c *gin.Context) {
 		common_response.FailWithMessage("用户名不存在或者密码错误", c)
 		return
 	}
-	// TODO:多次登录错误, TokenNext实现
+	// TODO:多次登录错误, TokenNext实现, 更新ip
 	u.TokenNext(c, *user)
 }
 

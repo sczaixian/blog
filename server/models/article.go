@@ -13,8 +13,8 @@ type Article struct {
 	LikeCount    int    `json:"like_count" gorm:"default:0;comment:点赞数"`
 	CommentCount int    `json:"comment_count" gorm:"default:0;comment:评论数"`
 
-	UserID     uint `json:"user_id" gorm:"index"`     // 作者id
-	CategoryID uint `json:"category_id" gorm:"index"` // 分类id
+	UserID     uint `json:"user_id" gorm:"index; not null"`     // 作者id
+	CategoryID uint `json:"category_id" gorm:"index; not null"` // 分类id
 
 	User     User      `json:"user" gorm:"foreignkey:UserID;reference:ID"`         // 作者
 	Category Category  `json:"category" gorm:"foreignkey:CategoryID;reference:ID"` // 分类
