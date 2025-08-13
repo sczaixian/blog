@@ -17,19 +17,24 @@ func (service *UserService) Login(u *models.User) (userInit *models.User, err er
 		return nil, fmt.Errorf("db not init")
 	}
 	var user models.User
-	err = global.GVA_DB.Where("username = ?", u.UserName).Preload("Articles").Preload("Authority").First(&user).Error
+	fmt.Println(*u)
+	err = global.GVA_DB.Where("user_name = ?", u.UserName).Preload("Articles").First(&user).Error
 	if err == nil {
 		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
+			fmt.Println("-----password error")
 			return nil, fmt.Errorf("password error")
 		}
-		return nil, err
+		return &user, err
 	}
-	return u, nil
+	fmt.Println(err, " ===== user: ", user)
+	return &user, nil
 }
 
 func (service *UserService) Register(u models.User) (userInit models.User, err error) {
 	var user models.User
-	if !errors.Is(global.GVA_DB.Where("username = ?", u.UserName).First(&user).Error, gorm.ErrRecordNotFound) {
+	fmt.Println(u)
+	fmt.Println(global.GVA_DB)
+	if !errors.Is(global.GVA_DB.Where("user_name = ?", u.UserName).First(&user).Error, gorm.ErrRecordNotFound) {
 		return userInit, errors.New("用户名已注册")
 	}
 	u.Password = utils.BcryptHash(u.Password)

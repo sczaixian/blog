@@ -1,6 +1,7 @@
 package response
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +19,7 @@ const (
 )
 
 func Result(code int, data interface{}, msg string, c *gin.Context) {
+	fmt.Println("----------", code, data, msg)
 	// 开始时间
 	c.JSON(http.StatusOK, Response{
 		code,
