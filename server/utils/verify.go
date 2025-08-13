@@ -7,4 +7,5 @@ var (
 	ArticleCreate        = Rules{"Title": {NotEmpty()}, "Content": {NotEmpty()}, "CategoryId": {NotEmpty()}}
 	ArticleUpdate        = Rules{"Title": {NotEmpty()}, "Content": {NotEmpty()}}
 	ArticleSave          = Rules{"Title": {NotEmpty()}}
+	PageInfoVerify       = Rules{"Page": {NotEmpty()}, "PageSize": {NotEmpty()}}
 )

@@ -19,7 +19,9 @@ func initRouter() *gin.Engine {
 		router.Use(gin.Logger())
 	}
 	sysRouter := rter.RouterGroupApp.UserRouter
+	articRouter := rter.RouterGroupApp.ArticleRouter
 	sysRouter.InitUserRouter(router.Group("/"))
+	articRouter.InitArticleRouter(router.Group("/"))
 	return router
 }
 

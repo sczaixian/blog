@@ -3,6 +3,7 @@ package system
 import (
 	"blog/server/global"
 	"blog/server/models"
+	"blog/server/models/common/request"
 	"errors"
 	"fmt"
 
@@ -75,4 +76,18 @@ func (as *ArticleService) GetArticle(id uint) (art *models.Article, err error) {
 		}
 	}
 	return &article, nil
+}
+
+func (as *ArticleService) ListArticle(uID uint, info request.PageInfo, order string, desc string) (list interface{}, total int64, err error) {
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
+	db := global.GVA_DB.Model(&models.Article{})
+	var articles []models.Article
+	err = db.Where("UserID = ? and Status = 1", uID).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	db.Count(&total)
+	err = db.Order(order).Limit(limit).Offset(offset).Find(&articles).Error
+	return articles, total, err
 }
