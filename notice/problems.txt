@@ -158,5 +158,37 @@ Header/Cookie：c.GetHeader("User-Agent")、c.Cookie("session")
 
 
 
-
-
+gin.Context包含：
+请求信息：
+    Request 对象：c.Request *http.Request- 原始 HTTP 请求
+    请求方法：c.Request.Method- GET/POST/PUT/DELETE 等
+    请求路径：c.Request.URL.Path
+    请求头：c.Request.Header
+    查询参数：c.Query("name")- 获取 URL 查询参数
+    表单数据：c.PostForm("name")- 获取表单数据
+    路径参数：c.Param("id")- 获取路由参数
+    请求体：c.ShouldBindJSON(&obj)- 绑定 JSON 请求体
+响应：
+    响应状态码：c.Status(200)
+    响应头：c.Header("Key", "Value")
+    响应数据：
+        c.String(200, "text")- 返回文本
+        c.JSON(200, obj)- 返回 JSON
+        c.HTML(200, "template.html", data)- 返回 HTML
+    重定向：c.Redirect(302, "/new-path")
+中间件：
+    Keys 存储：用于中间件间传递数据
+        c.Set("key", value)- 存储数据
+        c.Get("key")- 获取数据
+    中止链：c.Abort()- 中止后续处理程序
+    下一个处理程序：c.Next()- 调用下一个处理程序
+其他信息：
+    客户端IP：c.ClientIP()
+    内容协商：
+        c.NegotiateFormat(offers...)- 内容协商
+        c.GetHeader("Accept")- 获取 Accept 头
+    Cookie 操作：
+        c.Cookie("name")- 获取 Cookie
+        c.SetCookie("name", "value", maxAge, path, domain, secure, httpOnly)
+    文件上传：c.FormFile("file")- 获取上传文件
+    流式响应：c.Stream(func(w io.Writer) bool { ... })
