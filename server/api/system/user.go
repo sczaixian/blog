@@ -12,6 +12,7 @@ import (
 	//"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 )
 
@@ -68,12 +69,39 @@ func interfaceToInt(v interface{}) (i int) {
 
 // TokenNext 登录以后签发jwt
 func (u *UserApi) TokenNext(c *gin.Context, user models.User) {
-	//token, claims, err := utils.Lo
-	common_response.OkWithDetailed(response.LoginResponse{
-		User:      user,
-		Token:     "token_123456",
-		ExpiresAt: 200000 * 1000,
-	}, "登录成功", c)
+	token, _, err := utils.LoginToken(&user)
+	if err != nil {
+		global.GVA_LOG.Error("获取token失败", zap.Error(err))
+		common_response.FailWithMessage("获取token失败", c)
+		return
+	}
+	// skip 多点登录
+	jwtstr, err := jwtService.GetRedisJWT(user.UserName)
+	if err == redis.Nil {
+		if err = utils.SetRedisJWT(token, user.UserName); err != nil {
+			global.GVA_LOG.Error("设置登录状态失败!", zap.Error(err))
+			common_response.FailWithMessage("设置登录状态失败", c)
+			return
+		}
+		utils.SetToken(c, token, 200000)
+		common_response.OkWithDetailed(response.LoginResponse{
+			User:      user,
+			Token:     "token_123456",
+			ExpiresAt: 200000 * 1000,
+		}, "登录成功", c)
+	} else if err != nil {
+		global.GVA_LOG.Error("设置登录状态失败!", zap.Error(err))
+		common_response.FailWithMessage("设置登录状态失败", c)
+	} else {
+		var black_jwt models.Jwt
+		black_jwt.Jwt = jwtstr
+		// 存jwt入库
+		common_response.OkWithDetailed(response.LoginResponse{
+			User:      user,
+			Token:     "token_123456",
+			ExpiresAt: 200000 * 1000,
+		}, "登录成功", c)
+	}
 }
 
 func (u *UserApi) Register(c *gin.Context) {

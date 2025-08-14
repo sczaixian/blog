@@ -4,4 +4,5 @@ type ServiceGroup struct {
 	UserService
 	ArticleService
 	CategoryService
+	JwtService
 }

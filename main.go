@@ -3,6 +3,7 @@ package main
 import (
 	"blog/server/core"
 	"blog/server/global"
+	"blog/server/middleware"
 	"blog/server/models"
 	rter "blog/server/router"
 
@@ -15,6 +16,7 @@ func initRouter() *gin.Engine {
 	if gin.Mode() == gin.DebugMode {
 		router.Use(gin.Logger())
 	}
+	router.Use(middleware.JwtMiddleware())
 	sysRouter := rter.RouterGroupApp.UserRouter
 	articleRouter := rter.RouterGroupApp.ArticleRouter
 	categoryRouter := rter.RouterGroupApp.CategoryRouter

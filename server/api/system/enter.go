@@ -16,4 +16,5 @@ var (
 	userService     = service.ServiceGroupApp.ServiceGroup.UserService
 	articleService  = service.ServiceGroupApp.ServiceGroup.ArticleService
 	categoryService = service.ServiceGroupApp.ServiceGroup.CategoryService
+	jwtService      = service.ServiceGroupApp.ServiceGroup.JwtService
 )
