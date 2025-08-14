@@ -1,0 +1,9 @@
+blog_2025-08-14 20:32:29.186	[34minfo[0m	D:/develop_project/go_proj/blog/main.go:30	redis ping response	{"name": "", "pong": "PONG"}
+blog_2025-08-14 20:37:10.174	[34minfo[0m	D:/develop_project/go_proj/blog/main.go:30	redis ping response	{"name": "", "pong": "PONG"}
+blog_2025-08-14 20:39:08.828	[34minfo[0m	D:/develop_project/go_proj/blog/main.go:30	redis ping response	{"name": "", "pong": "PONG"}
+blog_2025-08-14 20:40:07.864	[34minfo[0m	D:/develop_project/go_proj/blog/main.go:30	redis ping response	{"name": "", "pong": "PONG"}
+blog_2025-08-14 20:57:07.223	[34minfo[0m	D:/develop_project/go_proj/blog/main.go:30	redis ping response	{"name": "", "pong": "PONG"}
+blog_2025-08-14 21:09:05.358	[34minfo[0m	D:/develop_project/go_proj/blog/main.go:30	redis ping response	{"name": "", "pong": "PONG"}
+blog_2025-08-14 21:11:17.574	[34minfo[0m	D:/develop_project/go_proj/blog/main.go:30	redis ping response	{"name": "", "pong": "PONG"}
+blog_2025-08-14 21:12:08.079	[34minfo[0m	D:/develop_project/go_proj/blog/main.go:30	redis ping response	{"name": "", "pong": "PONG"}
+blog_2025-08-14 21:35:20.963	[34minfo[0m	D:/develop_project/go_proj/blog/main.go:30	redis ping response	{"name": "", "pong": "PONG"}

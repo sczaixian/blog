@@ -2,6 +2,7 @@ package system
 
 import (
 	"blog/server/global"
+	"blog/server/models"
 	"context"
 )
 
@@ -12,6 +13,15 @@ var JwtServiceApp = new(JwtService)
 func (jwtService *JwtService) GetRedisJWT(userName string) (redisJWT string, err error) {
 	redisJWT, err = global.GVA_REDIS.Get(context.Background(), userName).Result()
 	return redisJWT, err
+}
+
+func (jwtService *JwtService) JsonInBlacklist(jwtList models.Jwt) (err error) {
+	err = global.GVA_DB.Create(&jwtList).Error
+	if err != nil {
+		return
+	}
+	//global.BlackCache.SetDefault(jwtList.Jwt, struct{}{})
+	return
 }
 
 //

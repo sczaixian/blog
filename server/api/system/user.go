@@ -7,7 +7,6 @@ import (
 	"blog/server/models/request"
 	"blog/server/models/response"
 	"blog/server/utils"
-
 	"fmt"
 	//"time"
 
@@ -34,21 +33,11 @@ func (u *UserApi) Login(c *gin.Context) {
 		return
 	}
 
-	//查缓存
-	//v, ok := global.BlackCache.Get(key)
-	//if !ok {
-	//	global.BlackCache.Set(key, 1, time.Second*time.Duration(openCaptchaTimeOut))
-	//}
-	//fmt.Println(v)
-	//var oc = interfaceToInt(v)
-	//fmt.Println(oc)
-
 	us := &models.User{UserName: login.Username, Password: login.Password}
 	user, err := userService.Login(us)
 	if err != nil {
 		fmt.Println("登陆失败! 用户名不存在或者密码错误!", err)
 		global.GVA_LOG.Error("登陆失败! 用户名不存在或者密码错误!", zap.Error(err))
-		//global.BlackCache.Increment(key, 1)
 		common_response.FailWithMessage("用户名不存在或者密码错误", c)
 		return
 	}
@@ -95,6 +84,15 @@ func (u *UserApi) TokenNext(c *gin.Context, user models.User) {
 	} else {
 		var black_jwt models.Jwt
 		black_jwt.Jwt = jwtstr
+		if err = jwtService.JsonInBlacklist(black_jwt); err != nil {
+			common_response.FailWithMessage("jwt作废失败", c)
+			return
+		}
+		if err = utils.SetRedisJWT(token, jwtstr); err != nil {
+			common_response.FailWithMessage("设置登录状态失败", c)
+			return
+		}
+		utils.SetToken(c, token, 200000)
 		// 存jwt入库
 		common_response.OkWithDetailed(response.LoginResponse{
 			User:      user,

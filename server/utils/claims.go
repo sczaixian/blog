@@ -4,6 +4,7 @@ import (
 	"blog/server/global"
 	"blog/server/models"
 	"blog/server/models/request"
+	"fmt"
 	"net"
 	"time"
 
@@ -36,10 +37,13 @@ func SetToken(c *gin.Context, token string, maxAge int) {
 
 func GetToken(c *gin.Context) string {
 	token := c.Request.Header.Get("x-token")
+	fmt.Println("----token--->> ", token)
 	if token == "" {
 		j := NewJWT()
 		token, _ = c.Cookie("x-token")
+		fmt.Println("---Cookie-token--->> ", token)
 		claims, err := j.ParseToken(token)
+		fmt.Println("---GetToken--->> ", claims, "-----", err)
 		if err != nil {
 			global.GVA_LOG.Error("重新写入cookie token失败,未能成功解析token,请检查请求头是否存在x-token且claims是否为规定结构")
 			return token
@@ -50,7 +54,9 @@ func GetToken(c *gin.Context) string {
 }
 
 func GetClaims(c *gin.Context) (*request.CustomClaims, error) {
+	fmt.Println("==---------GetClaims------------")
 	token := GetToken(c)
+	fmt.Println("----------GetClaims-----------------", token)
 	j := NewJWT()
 	claims, err := j.ParseToken(token)
 	if err != nil {

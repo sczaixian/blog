@@ -137,10 +137,9 @@ notification:
         /notifications
 
 
+docker 启动redis
+docker run --name blog_redis -p 6379:6379 -v /home/sc/redis_data_files/data/:/data -v /home/sc/redis_data_files/conf/redis.conf:/etc/redis/redis.conf -d redis redis-server /etc/redis/redis.conf
 
-------20250813-todo：------
-中间件，用来判断用户登录鉴权
-redis 存储 token
 
 
 Gin 内置绑定方法 根据请求的 Content-Type 自动选择解析器（JSON/XML/Form 等

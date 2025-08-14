@@ -9,6 +9,16 @@ import (
 
 func JwtMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		skipPaths := map[string]bool{
+			"/user/login":    true,
+			"/user/logout":   true,
+			"/user/register": true,
+		}
+
+		if _, ok := skipPaths[c.Request.URL.Path]; ok {
+			c.Next()
+			return
+		}
 		token := utils.GetToken(c)
 		if token == "" {
 			response.NoAuth("", c)

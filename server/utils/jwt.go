@@ -5,9 +5,10 @@ import (
 	"blog/server/models/request"
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
+	jwt "github.com/golang-jwt/jwt/v5"
 )
 
 type JWT struct {
@@ -51,10 +52,11 @@ func (j *JWT) CreateClaims(baseClaims request.BaseClaims) request.CustomClaims {
 }
 
 func (j *JWT) ParseToken(tokenString string) (*request.CustomClaims, error) {
+	fmt.Println("-----------1------------------", tokenString, "sss")
 	token, err := jwt.ParseWithClaims(tokenString, &request.CustomClaims{}, func(token *jwt.Token) (i interface{}, e error) {
 		return j.SigningKey, nil
 	})
-
+	fmt.Println("-------------2----------------")
 	if err != nil {
 		switch {
 		case errors.Is(err, jwt.ErrTokenExpired):
@@ -69,11 +71,13 @@ func (j *JWT) ParseToken(tokenString string) (*request.CustomClaims, error) {
 			return nil, TokenInvalid
 		}
 	}
+	fmt.Println("-------------3----------------")
 	if token != nil {
 		if claims, ok := token.Claims.(*request.CustomClaims); ok && token.Valid {
 			return claims, nil
 		}
 	}
+	fmt.Println("-------------4----------------")
 	return nil, TokenValid
 }
 

@@ -18,16 +18,10 @@ zap:
 
 # redis configuration
 redis:
-  #是否使用redis集群模式
-  useCluster: false
   #使用集群模式addr和db默认无效
-  addr: 127.0.0.1:6379
+  addr: 192.168.3.52:6379
   password: ""
   db: 0
-  clusterAddrs:
-    - "172.21.0.3:7000"
-    - "172.21.0.4:7001"
-    - "172.21.0.2:7002"
 
 # mongo configuration
 mongo:
@@ -76,19 +70,6 @@ system:
   use-strict-auth: false
 
 
-# mysql connect configuration
-# 未初始化之前请勿手动修改数据库信息！！！如果一定要手动初始化请看（https://gin-vue-admin.com/docs/first_master）
-mysql:
-  path: ""
-  port: ""
-  config: ""
-  db-name: "blog"
-  username: ""
-  password: ""
-  max-idle-conns: 10
-  max-open-conns: 100
-  log-mode: ""
-  log-zap: false
 
 # local configuration
 local:
