@@ -8,6 +8,8 @@ type Login interface {
 	GetUserInfo() any
 }
 
+var _ Login = new(User)
+
 type User struct {
 	BaseModel
 	UserName      string         `gorm:"type:varchar(50);not null;unique;comment:用户名" json:"user_name"`

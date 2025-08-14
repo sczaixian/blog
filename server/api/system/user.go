@@ -46,7 +46,7 @@ func (u *UserApi) Login(c *gin.Context) {
 	user, err := userService.Login(us)
 	if err != nil {
 		fmt.Println("登陆失败! 用户名不存在或者密码错误!", err)
-		//global.GVA_LOG.Error("登陆失败! 用户名不存在或者密码错误!", zap.Error(err))
+		global.GVA_LOG.Error("登陆失败! 用户名不存在或者密码错误!", zap.Error(err))
 		//global.BlackCache.Increment(key, 1)
 		common_response.FailWithMessage("用户名不存在或者密码错误", c)
 		return
@@ -92,7 +92,7 @@ func (u *UserApi) Register(c *gin.Context) {
 	userReturn, err := userService.Register(*user)
 
 	if err != nil {
-		//global.GVA_LOG.Error("注册失败!", zap.Error(err))
+		global.GVA_LOG.Error("注册失败!", zap.Error(err))
 		common_response.FailWithDetailed(response.SysUserResponse{User: userReturn}, "注册失败", c)
 		return
 	}

@@ -18,8 +18,35 @@ func (as *ArticleService) CreateArticle(art *models.Article) (err error) {
 }
 
 func (as *ArticleService) EditArticle(art *models.Article, id uint) (err error) {
-	err = as.update(art, &id)
-	return err
+	if id == 0 {
+		return errors.New("article ID is required")
+	}
+
+	// 确保 art.ID 和传入的 id 一致，避免混淆
+	art.ID = id
+
+	// 使用结构体更新，更清晰
+	result := global.GVA_DB.Model(&models.Article{}).
+		Where("id = ?", id).
+		Updates(models.Article{
+			Title:      art.Title,
+			Content:    art.Content,
+			Excerpt:    art.Excerpt,
+			CategoryID: art.CategoryID,
+			Status:     art.Status,
+			CoverImage: art.CoverImage,
+		})
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	// 如果没找到记录，返回错误，而不是自动创建
+	if result.RowsAffected == 0 {
+		return errors.New("article not found")
+	}
+
+	return nil
 }
 
 func (as *ArticleService) DeleteArticle(id uint) (err error) {
@@ -35,36 +62,6 @@ func (as *ArticleService) DeleteArticle(id uint) (err error) {
 	return nil
 }
 
-func (as *ArticleService) update(art *models.Article, id *uint) (err error) {
-	var articleID uint
-	if id == nil {
-		articleID = art.ID
-	} else {
-		articleID = *id
-	}
-	result := global.GVA_DB.Model(&art).Where("id = ?", articleID).Updates(map[string]interface{}{
-		"title":       art.Title,
-		"content":     art.Content,
-		"except":      art.Excerpt,
-		"category_id": art.CategoryID,
-		"updated_at":  gorm.Expr("CURRENT_TIMESTAMP"),
-		"status":      0,
-	})
-	if result.Error != nil {
-		err = result.Error
-	}
-	if result.RowsAffected == 0 {
-		err = global.GVA_DB.Create(&art).Error
-		return err
-	}
-	return nil
-}
-
-func (as *ArticleService) SaveArticle(art *models.Article) (err error) {
-	err = as.update(art, nil)
-	return err
-}
-
 func (as *ArticleService) GetArticle(id uint) (art *models.Article, err error) {
 	var article models.Article
 	result := global.GVA_DB.First(&article, id)
@@ -78,16 +75,14 @@ func (as *ArticleService) GetArticle(id uint) (art *models.Article, err error) {
 	return &article, nil
 }
 
-func (as *ArticleService) ListArticle(uID uint, info request.PageInfo, order string, desc string) (list interface{}, total int64, err error) {
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
-	db := global.GVA_DB.Model(&models.Article{})
-	var articles []models.Article
-	err = db.Where("UserID = ? and Status = 1", uID).Error
-	if err != nil {
+func (as *ArticleService) ListArticle(uID uint, info request.PageInfo) (list interface{}, total int64, err error) {
+	db := global.GVA_DB.Model(models.Article{}).Where("user_id = ? and Status = 1", uID)
+	if err = db.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
-	db.Count(&total)
-	err = db.Order(order).Limit(limit).Offset(offset).Find(&articles).Error
+	var articles []models.Article
+	if err = db.Order("Created_At desc").Scopes(info.Paginate()).Find(&articles).Error; err != nil {
+		return nil, 0, err
+	}
 	return articles, total, err
 }

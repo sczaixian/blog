@@ -5,18 +5,14 @@ import (
 	"blog/server/models/common/request"
 )
 
-type CreateArticle struct {
+type ModifyArticleBase struct {
 	Title      string `json:"title"`
 	Content    string `json:"content"`
 	Excerpt    string `json:"excerpt"`
 	CategoryID uint   `json:"category_id"`
-}
-
-type UpdateArticle struct {
-	Title      string `json:"title"`
-	Content    string `json:"content"`
-	Excerpt    string `json:"excerpt"`
-	CategoryID uint   `json:"category_id"`
+	UserID     uint   `json:"user_id"`
+	Status     int    `json:"status"`
+	CoverImage string `json:"cover_image"`
 }
 
 type ListArticle struct {

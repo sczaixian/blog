@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -17,17 +18,15 @@ func (service *UserService) Login(u *models.User) (userInit *models.User, err er
 		return nil, fmt.Errorf("db not init")
 	}
 	var user models.User
-	fmt.Println(*u)
 	err = global.GVA_DB.Where("user_name = ?", u.UserName).Preload("Articles").First(&user).Error
 	if err == nil {
 		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
-			fmt.Println("-----password error")
-			return nil, fmt.Errorf("password error")
+			global.GVA_LOG.Error("密码错误!", zap.Error(err))
+			return nil, errors.New("密码错误")
 		}
-		return &user, err
+		return &user, nil
 	}
-	fmt.Println(err, " ===== user: ", user)
-	return &user, nil
+	return nil, err
 }
 
 func (service *UserService) Register(u models.User) (userInit models.User, err error) {

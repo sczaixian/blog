@@ -8,7 +8,7 @@ jwt:
 zap:
   level: info
   format: console
-  prefix: "[github.com/flipped-aurora/gin-vue-admin/server]"
+  prefix: "blog_"
   director: log
   show-line: true
   encode-level: LowercaseColorLevelEncoder
@@ -82,7 +82,7 @@ mysql:
   path: ""
   port: ""
   config: ""
-  db-name: ""
+  db-name: "blog"
   username: ""
   password: ""
   max-idle-conns: 10
