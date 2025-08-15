@@ -256,3 +256,35 @@ unique - 在数据库中必须是唯一的
 
 
 Tags []*Tag `json:"tags,omitempty"`   // 如果为空则不在 JSON 中出现
+
+
+
+Tags []*Tag 和 Tags []Tag 的区别：
+    1. 存储元素不同，一个村元素完整结构体，另一个存指针
+    2. 前者修改需要从新赋值，指针可以直接修改
+    3. 性能上指针更高效
+    4. 空值指针可以包含 nil，存值则不能是nil
+    5. 指针常用于 多对多关系映射
+
+修改时：
+    // 值切片 - 需要按索引重新赋值
+    post.Tags[0].Name = "new name" // 不会影响原始值
+    post.Tags[0] = Tag{Name: "new name"} // 需要这样
+
+    // 指针切片 - 可以直接修改
+    post.Tags[0].Name = "new name" // 直接生效
+
+
+
+
+
+Name string `gorm:"column:name; comment:用户真实姓名" label:"用户名"`
+label:"用户名"会在  **前端表单中**  显示为"用户名"
+comment:用户真实姓名会作为数据库字段的注释
+
+
+
+
+
+
+
