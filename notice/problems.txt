@@ -236,3 +236,23 @@ gin.Context包含：
     "cover_image":"xxddss",
     "user_id": 2
 }
+
+
+size:255  和  type:varchar(255)
+size: GORM自动选择合适类型, 适用多种类型的长度，简洁
+type: 显式指定类型，精确数据库类型，用户字符型
+
+
+email - 必须是有效的电子邮件格式
+numeric - 必须是数字
+alpha - 只能包含字母
+alphanum - a-zA-Z0-9
+lowercase - 必须是小写字母
+uppercase - 必须是大写字母
+eqfield=OtherField - 必须等于另一个字段的值
+oneof=red green blue - 必须是列举值之一
+unique - 在数据库中必须是唯一的 
+
+
+
+Tags []*Tag `json:"tags,omitempty"`   // 如果为空则不在 JSON 中出现
